@@ -1,0 +1,1604 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Git & GitHub Masterclass – Complete Guide</title>
+  <style>
+    @import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Fira+Mono:wght@400;500;700&family=Inter:wght@400;500;600&display=swap");
+
+    :root {
+      --primary:   #6366f1;
+      --primary-dark: #4338ca;
+      --green:     #10b981;
+      --yellow:    #f59e0b;
+      --red:       #ef4444;
+      --pink:      #ec4899;
+      --teal:      #14b8a6;
+      --orange:    #f97316;
+      --purple:    #8b5cf6;
+      --dark:      #0f172a;
+      --dark2:     #1e293b;
+      --text:      #1e293b;
+      --muted:     #64748b;
+      --border:    #e2e8f0;
+      --bg:        #f8fafc;
+      --white:     #ffffff;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; background: var(--bg); }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      font-size: 15.5px;
+      line-height: 1.75;
+      color: var(--text);
+    }
+
+    /* ─── NAVBAR ─── */
+    .navbar {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      background: rgba(15,23,42,.95);
+      backdrop-filter: blur(10px);
+      padding: 12px 24px;
+      display: flex; align-items: center; gap: 16px;
+      overflow-x: auto;
+    }
+    .navbar a {
+      color: #94a3b8; text-decoration: none; font-size: 12px;
+      font-weight: 600; white-space: nowrap; font-family: 'Space Grotesk', sans-serif;
+      letter-spacing: .03em; padding: 4px 10px; border-radius: 20px;
+      transition: all .2s;
+    }
+    .navbar a:hover { color: #fff; background: rgba(99,102,241,.4); }
+    .navbar .logo { color: #fff; font-weight: 700; font-size: 14px; margin-right: auto; white-space: nowrap; }
+    .navbar .logo span { color: #6366f1; }
+
+    /* ─── HERO ─── */
+    .hero {
+      background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%);
+      padding: 120px 24px 80px;
+      text-align: center;
+      position: relative; overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse at 50% 0%, rgba(99,102,241,.25) 0%, transparent 70%);
+    }
+    .hero h1 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(36px, 6vw, 64px);
+      font-weight: 700;
+      color: #fff; line-height: 1.1;
+      margin-bottom: 16px; position: relative;
+    }
+    .hero h1 span { color: #818cf8; }
+    .hero p {
+      font-size: 18px; color: #94a3b8;
+      max-width: 580px; margin: 0 auto 32px; position: relative;
+    }
+    .tags { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; position: relative; }
+    .tag {
+      background: rgba(99,102,241,.2); border: 1px solid rgba(99,102,241,.4);
+      color: #a5b4fc; padding: 5px 14px; border-radius: 20px;
+      font-size: 12px; font-weight: 600; font-family: 'Space Grotesk', sans-serif;
+    }
+
+    /* ─── LAYOUT ─── */
+    .page { max-width: 960px; margin: 0 auto; padding: 40px 20px 80px; }
+
+    /* ─── SECTION CARDS ─── */
+    .section {
+      background: var(--white); border-radius: 16px;
+      border: 1px solid var(--border);
+      padding: 48px; margin-bottom: 40px;
+      box-shadow: 0 1px 3px rgba(0,0,0,.06), 0 4px 16px rgba(0,0,0,.04);
+    }
+
+    /* ─── SECTION HEADER BAND ─── */
+    .section-header {
+      display: flex; align-items: center; gap: 14px;
+      margin-bottom: 32px;
+      padding-bottom: 20px;
+      border-bottom: 2px solid var(--border);
+    }
+    .section-icon {
+      width: 48px; height: 48px; border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px; flex-shrink: 0;
+    }
+    .section-header h2 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 26px; font-weight: 700; color: var(--dark);
+    }
+    .section-header .num {
+      font-size: 12px; font-weight: 700; color: var(--muted); letter-spacing: .08em;
+    }
+
+    /* ─── TYPOGRAPHY ─── */
+    h3 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 20px; font-weight: 700; color: var(--dark);
+      margin: 36px 0 14px;
+    }
+    h3:first-child { margin-top: 0; }
+    h4 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 16px; font-weight: 700; color: var(--dark);
+      margin: 20px 0 10px;
+    }
+    p { margin-bottom: 14px; }
+    p:last-child { margin-bottom: 0; }
+    a { color: var(--primary); font-weight: 500; }
+    strong { font-weight: 700; color: var(--dark); }
+    em { color: var(--muted); font-style: italic; }
+
+    /* ─── CODE ─── */
+    code {
+      font-family: 'Fira Mono', monospace;
+      background: #f1f5f9; border: 1px solid #e2e8f0;
+      color: #7c3aed; padding: 2px 7px;
+      border-radius: 5px; font-size: 13px;
+    }
+
+    /* ─── TERMINAL ─── */
+    .terminal {
+      background: #0d1117; border-radius: 12px;
+      overflow: hidden; margin: 20px 0;
+      border: 1px solid #30363d;
+    }
+    .terminal-bar {
+      background: #161b22; padding: 10px 16px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .terminal-bar .dot { width: 12px; height: 12px; border-radius: 50%; }
+    .terminal-bar .dot.r { background: #ff5f57; }
+    .terminal-bar .dot.y { background: #febc2e; }
+    .terminal-bar .dot.g { background: #28c840; }
+    .terminal-bar .label {
+      font-size: 11px; color: #8b949e;
+      font-family: 'Fira Mono', monospace; margin-left: 8px;
+    }
+    .terminal-body {
+      padding: 20px 24px;
+      font-family: 'Fira Mono', monospace; font-size: 13px; line-height: 1.9;
+    }
+    .t-prompt { color: #58a6ff; }
+    .t-cmd { color: #e6edf3; }
+    .t-out { color: #3fb950; }
+    .t-comment { color: #8b949e; font-style: italic; }
+    .t-err { color: #ff7b72; }
+    .t-yellow { color: #d29922; }
+
+    /* ─── PRE / DIAGRAM ─── */
+    pre {
+      background: #0d1117; color: #e6edf3;
+      padding: 20px 24px; border-radius: 12px;
+      overflow-x: auto; font-family: 'Fira Mono', monospace;
+      font-size: 12.5px; line-height: 1.7; margin: 16px 0;
+      border: 1px solid #30363d;
+    }
+    .diagram {
+      background: #f8fafc; border: 1px solid #e2e8f0;
+      border-left: 4px solid var(--primary);
+      border-radius: 10px; padding: 20px 24px; margin: 16px 0;
+      font-family: 'Fira Mono', monospace; font-size: 12px;
+      line-height: 1.8; overflow-x: auto;
+    }
+    .diagram-title { font-weight: 700; color: var(--primary); margin-bottom: 12px; font-size: 13px; }
+
+    /* ─── CALLOUT BOXES ─── */
+    .box {
+      padding: 18px 20px; border-radius: 10px; margin: 20px 0;
+      border-left: 4px solid;
+    }
+    .box h4 { margin-top: 0; }
+    .box p:last-child { margin: 0; }
+    .box-yellow  { background: #fffbeb; border-color: var(--yellow);  }
+    .box-yellow h4  { color: #92400e; }
+    .box-red     { background: #fef2f2; border-color: var(--red);    }
+    .box-red h4     { color: #991b1b; }
+    .box-blue    { background: #eff6ff; border-color: var(--primary); }
+    .box-blue h4    { color: #1e40af; }
+    .box-green   { background: #ecfdf5; border-color: var(--green);  }
+    .box-green h4   { color: #065f46; }
+    .box-purple  { background: #f5f3ff; border-color: var(--purple); }
+    .box-purple h4  { color: #4c1d95; }
+    .box-teal    { background: #f0fdfa; border-color: var(--teal);   }
+    .box-teal h4    { color: #134e4a; }
+    .box-orange  { background: #fff7ed; border-color: var(--orange); }
+    .box-orange h4  { color: #7c2d12; }
+
+    /* ─── GRID / CARDS ─── */
+    .grid-2 { display: grid; grid-template-columns: repeat(auto-fit,minmax(260px,1fr)); gap: 18px; margin: 20px 0; }
+    .grid-3 { display: grid; grid-template-columns: repeat(auto-fit,minmax(200px,1fr)); gap: 16px; margin: 20px 0; }
+    .grid-4 { display: grid; grid-template-columns: repeat(auto-fit,minmax(160px,1fr)); gap: 14px; margin: 20px 0; }
+    .card {
+      background: var(--bg); border: 1px solid var(--border);
+      border-radius: 12px; padding: 20px;
+    }
+    .card h4 { margin-top: 0; margin-bottom: 8px; }
+    .card-top { border-top: 3px solid var(--primary); }
+    .card-top.g { border-color: var(--green); }
+    .card-top.y { border-color: var(--yellow); }
+    .card-top.r { border-color: var(--red); }
+    .card-top.p { border-color: var(--purple); }
+    .card-top.t { border-color: var(--teal); }
+    .card-top.o { border-color: var(--orange); }
+
+    /* ─── PERSON BADGES ─── */
+    .person-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(130px,1fr)); gap: 14px; margin: 20px 0; }
+    .person {
+      background: var(--bg); border: 1px solid var(--border);
+      border-radius: 12px; padding: 16px; text-align: center;
+    }
+    .person-emoji { font-size: 32px; display: block; margin-bottom: 8px; }
+    .person-name { font-weight: 700; font-family: 'Space Grotesk',sans-serif; }
+    .person-role { font-size: 12px; color: var(--muted); }
+
+    /* ─── STEPS ─── */
+    .steps { display: grid; gap: 16px; margin: 20px 0; }
+    .step { display: flex; gap: 16px; align-items: flex-start; }
+    .step-num {
+      width: 36px; height: 36px; border-radius: 50%; flex-shrink: 0;
+      background: var(--primary); color: #fff; font-weight: 700;
+      display: flex; align-items: center; justify-content: center; font-size: 14px;
+      font-family: 'Space Grotesk',sans-serif;
+    }
+    .step-body h4 { margin: 4px 0 6px; }
+    .step-body p { margin: 0; }
+
+    /* ─── TABLE ─── */
+    .table-wrap { overflow-x: auto; margin: 20px 0; }
+    table { width: 100%; border-collapse: collapse; font-size: 14px; }
+    thead { background: #f1f5f9; }
+    th { padding: 12px 14px; text-align: left; font-family: 'Space Grotesk',sans-serif; font-weight: 700; border-bottom: 2px solid var(--border); font-size: 13px; }
+    td { padding: 11px 14px; border-bottom: 1px solid #f1f5f9; vertical-align: top; }
+    tr:hover td { background: #f8fafc; }
+
+    /* ─── CMD BADGE ─── */
+    .cmd-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: #1e1b4b; color: #a5b4fc;
+      font-family: 'Fira Mono', monospace; font-size: 13px;
+      padding: 4px 12px; border-radius: 6px;
+      border: 1px solid #312e81;
+    }
+
+    /* ─── CHEATSHEET GRID ─── */
+    .cheat-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(280px,1fr)); gap: 20px; margin: 20px 0; }
+    .cheat-card { background: var(--dark2); border-radius: 12px; overflow: hidden; }
+    .cheat-card-head { padding: 12px 18px; font-family: 'Space Grotesk',sans-serif; font-weight: 700; font-size: 13px; color: #fff; }
+    .cheat-card-body { padding: 0 18px 16px; }
+    .cheat-row {
+      display: flex; justify-content: space-between; align-items: flex-start;
+      padding: 8px 0; border-bottom: 1px solid #334155; gap: 12px;
+    }
+    .cheat-row:last-child { border-bottom: none; }
+    .cheat-cmd { font-family: 'Fira Mono',monospace; font-size: 12px; color: #93c5fd; white-space: nowrap; }
+    .cheat-desc { font-size: 12px; color: #94a3b8; text-align: right; }
+
+    /* ─── PILL LABEL ─── */
+    .pill {
+      display: inline-block; padding: 2px 10px; border-radius: 20px;
+      font-size: 11px; font-weight: 700; font-family: 'Space Grotesk',sans-serif;
+    }
+    .pill-green  { background: #d1fae5; color: #065f46; }
+    .pill-red    { background: #fee2e2; color: #991b1b; }
+    .pill-blue   { background: #dbeafe; color: #1e40af; }
+    .pill-yellow { background: #fef3c7; color: #92400e; }
+    .pill-purple { background: #ede9fe; color: #4c1d95; }
+
+    /* ─── FLOW ARROW ─── */
+    .flow { display: flex; flex-wrap: wrap; gap: 0; align-items: center; margin: 20px 0; }
+    .flow-step {
+      background: var(--primary); color: #fff;
+      padding: 12px 20px; border-radius: 10px;
+      font-weight: 600; font-size: 13px; font-family: 'Space Grotesk',sans-serif;
+      text-align: center; min-width: 110px;
+    }
+    .flow-step.g { background: var(--green); }
+    .flow-step.y { background: var(--yellow); color: #000; }
+    .flow-step.o { background: var(--orange); }
+    .flow-step.p { background: var(--purple); }
+    .flow-arrow { padding: 0 8px; color: var(--muted); font-size: 20px; }
+
+    /* ─── GITHUB FEATURE CARDS ─── */
+    .gh-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(220px,1fr)); gap: 18px; margin: 20px 0; }
+    .gh-card {
+      border-radius: 12px; padding: 22px; border: 1px solid;
+    }
+    .gh-card h4 { margin: 10px 0 8px; font-size: 15px; }
+    .gh-card .icon { font-size: 28px; }
+
+    /* ─── FOOTER ─── */
+    .footer { background: var(--dark); color: #94a3b8; text-align: center; padding: 48px 24px; margin-top: 40px; }
+    .footer h3 { color: #fff; font-family: 'Space Grotesk',sans-serif; margin-bottom: 12px; font-size: 22px; }
+
+    /* ─── SECTION COLOR ACCENTS (left strip) ─── */
+    .accent-strip {
+      display: block; width: 5px; height: 32px;
+      border-radius: 3px; flex-shrink: 0;
+    }
+
+    ul, ol { padding-left: 22px; margin: 12px 0; }
+    li { margin-bottom: 8px; }
+
+    @media(max-width:700px){
+      .section { padding: 24px; }
+      .navbar a { font-size: 11px; }
+      .hero { padding: 100px 20px 60px; }
+      h3 { font-size: 17px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ─── NAVBAR ─── -->
+<nav class="navbar">
+  <span class="logo">Git &amp; <span>GitHub</span></span>
+  <a href="#s1">Intro</a>
+  <a href="#s2">VCS Types</a>
+  <a href="#s3">What is Git?</a>
+  <a href="#s4">Setup</a>
+  <a href="#s5">Upload Repos</a>
+  <a href="#s6">Basic CMD</a>
+  <a href="#s7">Special Files</a>
+  <a href="#s8">Workflow</a>
+  <a href="#s9">Branching</a>
+  <a href="#s10">Intermediate</a>
+  <a href="#s11">Advanced</a>
+  <a href="#s12">GitHub Features</a>
+  <a href="#s13">Cheat Sheet</a>
+</nav>
+
+<!-- ─── HERO ─── -->
+<div class="hero">
+  <h1>Git &amp; <span>GitHub</span><br>Masterclass</h1>
+  <p>The complete guide for college students — from zero to professional developer workflow.</p>
+  <div class="tags">
+    <span class="tag">🐙 Git</span>
+    <span class="tag">🐱 GitHub</span>
+    <span class="tag">🌿 Branching</span>
+    <span class="tag">🤝 Collaboration</span>
+    <span class="tag">💻 VS Code</span>
+    <span class="tag">🔧 Command Line</span>
+  </div>
+</div>
+
+<div class="page">
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- SECTION 1: INTRO – THE PROBLEM -->
+<!-- ══════════════════════════════════════════════ -->
+<section class="section" id="s1">
+  <div class="section-header">
+    <div class="section-icon" style="background:#ede9fe">🔥</div>
+    <div>
+      <div class="num">SECTION 01</div>
+      <h2>The Problem in Development</h2>
+    </div>
+  </div>
+
+  <p>Imagine you and three college friends are building a final-year project together:</p>
+
+  <div class="person-grid">
+    <div class="person"><span class="person-emoji">👨‍💻</span><div class="person-name">Rahul</div><div class="person-role">Frontend Dev</div></div>
+    <div class="person"><span class="person-emoji">👩‍💻</span><div class="person-name">Priya</div><div class="person-role">Backend Dev</div></div>
+    <div class="person"><span class="person-emoji">👨‍💻</span><div class="person-name">Arjun</div><div class="person-role">Database Dev</div></div>
+    <div class="person"><span class="person-emoji">👩‍💼</span><div class="person-name">Anaya</div><div class="person-role">Project Lead</div></div>
+  </div>
+
+  <div class="box box-red">
+    <h4>❌ Problem 1 — Lost Work</h4>
+    <p>Rahul finishes the login page on Day 1. On Day 2 he adds changes with a bug. The original working version is <strong>gone forever</strong>.</p>
+  </div>
+
+  <div class="box box-red">
+    <h4>❌ Problem 2 — File Name Chaos</h4>
+    <p>To avoid losing work, the team starts creating files like:</p>
+    <code>project.zip</code> &nbsp;→&nbsp; <code>project_v2.zip</code> &nbsp;→&nbsp; <code>project_FINAL.zip</code> &nbsp;→&nbsp; <code>project_FINAL_use_THIS_one.zip</code>
+  </div>
+
+  <div class="box box-red">
+    <h4>❌ Problem 3 — Collaboration Nightmare</h4>
+    <p>All four email their <code>app.py</code>. Anaya now has four files with the same name. Who has what? Who overwrote whose work?</p>
+  </div>
+
+  <div class="box box-red">
+    <h4>❌ Problem 4 — No History, No Accountability</h4>
+    <p>A feature breaks two weeks later. Who broke it? When? Why? No way to find out.</p>
+  </div>
+
+  <div class="box box-red">
+    <h4>❌ Problem 5 — No Backup</h4>
+    <p>Arjun's laptop crashes. All his database code is gone. The project is stuck for days.</p>
+  </div>
+
+  <div class="box box-green">
+    <h4>✅ The Solution: Version Control System (VCS)</h4>
+    <p>A VCS automatically tracks every change made to every file — who changed it, when, why — and lets you go back to any earlier version without ever renaming a file. It also enables seamless team collaboration.</p>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- SECTION 2: VCS TYPES -->
+<!-- ══════════════════════════════════════════════ -->
+<section class="section" id="s2">
+  <div class="section-header">
+    <div class="section-icon" style="background:#d1fae5">📂</div>
+    <div>
+      <div class="num">SECTION 02</div>
+      <h2>Version Control System — What, Why, Types</h2>
+    </div>
+  </div>
+
+  <h3>What is a Version Control System?</h3>
+  <p>A VCS is software that records every change made to a set of files over time so you can recall specific versions later. Think of it as a <strong>time machine for your code</strong>.</p>
+
+  <h3>Why Use VCS?</h3>
+  <div class="grid-3">
+    <div class="card card-top"><h4>⏱ Complete History</h4><p>See every change, who made it, and why.</p></div>
+    <div class="card card-top g"><h4>🧪 Experiment Safely</h4><p>Try new ideas without breaking working code.</p></div>
+    <div class="card card-top y"><h4>👥 Team Collaboration</h4><p>Multiple people work simultaneously without conflicts.</p></div>
+    <div class="card card-top r"><h4>🔄 Undo Mistakes</h4><p>Roll back any change in seconds.</p></div>
+    <div class="card card-top p"><h4>☁️ Backup</h4><p>Code is safe even if your laptop crashes.</p></div>
+    <div class="card card-top t"><h4>💼 Career Value</h4><p>Every tech company expects you to know VCS.</p></div>
+  </div>
+
+  <h3>Three Types of VCS</h3>
+
+  <div class="grid-2">
+    <div class="card card-top">
+      <h4>🗄️ Local VCS <span class="pill pill-yellow">Old</span></h4>
+      <p>Tracks changes on <em>your computer only</em>. Example: <strong>RCS (1980s)</strong>.</p>
+      <p>📖 <em>Like a personal diary that only you can read — and only if your house doesn't burn down.</em></p>
+      <p><strong>Problem:</strong> If your hard drive fails, everything is lost.</p>
+    </div>
+    <div class="card card-top y">
+      <h4>🏢 Centralized VCS <span class="pill pill-yellow">Older</span></h4>
+      <p>One server holds all versions. Teams check out files from it. Examples: <strong>CVS, SVN</strong>.</p>
+      <p>📖 <em>Like one library book the whole class shares — if the library closes, nobody can work.</em></p>
+      <p><strong>Problem:</strong> Single point of failure. Server down = everyone stuck.</p>
+    </div>
+  </div>
+
+  <div class="box box-blue">
+    <h4>🌐 Distributed VCS — The Modern Way <span class="pill pill-blue">Industry Standard</span></h4>
+    <p>Every developer has a <strong>complete copy</strong> of the entire project history on their own machine. Examples: <strong>Git, Mercurial</strong>.</p>
+    <p>📖 <em>Like everyone having their own full photocopy of the entire book — if one person loses theirs, 9 others still have it.</em></p>
+    <p><strong>Benefit:</strong> Works offline, no single point of failure, fast, collaborative.</p>
+  </div>
+
+  <h3>Popular Distributed VCS Tools</h3>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Tool</th><th>Creator</th><th>Best Known For</th><th>Still Used?</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Git</strong></td><td>Linus Torvalds (2005)</td><td>Linux kernel; now universal</td><td><span class="pill pill-green">✓ Dominant</span></td></tr>
+        <tr><td>Mercurial (Hg)</td><td>Matt Mackall</td><td>Simpler syntax than Git</td><td><span class="pill pill-yellow">Rare</span></td></tr>
+        <tr><td>Fossil</td><td>D. Richard Hipp</td><td>Built-in bug tracker + wiki</td><td><span class="pill pill-yellow">Niche</span></td></tr>
+        <tr><td>Bazaar</td><td>Canonical (Ubuntu)</td><td>Beginner-friendly design</td><td><span class="pill pill-red">Mostly gone</span></td></tr>
+        <tr><td>Perforce</td><td>Perforce Software</td><td>Large binaries, game dev</td><td><span class="pill pill-yellow">Enterprise</span></td></tr>
+        <tr><td>BitKeeper</td><td>BitMover Inc.</td><td>Used for Linux before Git</td><td><span class="pill pill-red">Replaced</span></td></tr>
+        <tr><td>Darcs</td><td>David Roundy</td><td>Unique patch-based model</td><td><span class="pill pill-red">Very rare</span></td></tr>
+        <tr><td>Azure Git</td><td>Microsoft</td><td>Git + Azure DevOps pipelines</td><td><span class="pill pill-green">Enterprise</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- SECTION 3: WHAT IS GIT & GITHUB -->
+<!-- ══════════════════════════════════════════════ -->
+<section class="section" id="s3">
+  <div class="section-header">
+    <div class="section-icon" style="background:#e0f2fe">🐙</div>
+    <div>
+      <div class="num">SECTION 03</div>
+      <h2>What is Git and GitHub?</h2>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div class="card card-top">
+      <h4>🔧 Git — The Tool on Your Computer</h4>
+      <p>Git is a <strong>version control software</strong> that lives on your laptop. It tracks every change to your files locally — completely offline.</p>
+      <p>📖 <em>Like your personal notebook: you write drafts, keep every version, and can flip back to any page.</em></p>
+    </div>
+    <div class="card card-top g">
+      <h4>🐱 GitHub — The Website in the Cloud</h4>
+      <p><strong>GitHub (github.com)</strong> is an online platform where you store your Git projects. It's like Google Drive, but built specifically for code and team collaboration.</p>
+      <p>📖 <em>Like a cloud locker where your team can all read, comment on, and contribute to the same notebook.</em></p>
+    </div>
+  </div>
+
+  <div class="box box-blue">
+    <h4>💡 Key Insight — Git vs GitHub</h4>
+    <p>You can use <strong>Git without GitHub</strong> (just tracking files locally). But you <strong>cannot use GitHub without Git</strong> — GitHub runs on top of Git. They are complementary tools.</p>
+  </div>
+
+  <h3>What is a Local Repository?</h3>
+  <p>A <strong>local repository</strong> (local repo) is the <code>.git</code> folder Git creates inside your project on your own laptop. It stores your entire commit history, branches, and snapshots — all on your machine.</p>
+  <div class="box box-purple">
+    <h4>📖 Analogy</h4>
+    <p>Your local repo is like your personal diary with every draft you ever wrote — stored in your room, accessible anytime even without internet.</p>
+  </div>
+
+  <h3>What is a Remote Repository?</h3>
+  <p>A <strong>remote repository</strong> (remote repo) is a copy of your project stored on a server — like GitHub, GitLab, or Bitbucket. It's the shared "source of truth" your team all syncs with.</p>
+  <div class="box box-green">
+    <h4>📖 Analogy</h4>
+    <p>The remote repo is like a shared Google Doc that everyone on the team can view, contribute to, and sync from — but it only shows what you've explicitly uploaded (<code>git push</code>).</p>
+  </div>
+
+  <h3>Local vs Remote — Side by Side</h3>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Feature</th><th>Local Repository</th><th>Remote Repository (GitHub)</th></tr></thead>
+      <tbody>
+        <tr><td>Where it lives</td><td>Your laptop (<code>.git</code> folder)</td><td>GitHub's servers (cloud)</td></tr>
+        <tr><td>Internet needed?</td><td>No — works offline</td><td>Yes</td></tr>
+        <tr><td>Who can see it?</td><td>Only you</td><td>Public or private (you choose)</td></tr>
+        <tr><td>If laptop crashes…</td><td>Code is gone</td><td>Safe in the cloud</td></tr>
+        <tr><td>Team collaboration?</td><td>No</td><td>Yes — everyone syncs here</td></tr>
+        <tr><td>How to sync</td><td><code>git push</code> to send up</td><td><code>git pull</code> / <code>clone</code> to get</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>How Git and GitHub Work Together</h3>
+  <div class="diagram">
+    <div class="diagram-title">Team Workflow Diagram</div>
+    <pre style="background:transparent;border:none;padding:0;color:var(--text);">Rahul's Laptop           GitHub.com (Remote)          Priya's Laptop
+(Local Git Repo)         (Shared Cloud Repo)          (Local Git Repo)
+      |                          |                           |
+      |──── git push ───────────►|                           |
+      |                          |◄──── git push ────────────|
+      |◄─── git pull ────────────|                           |
+      |                          |────── git clone ─────────►|
+      |                          |                           |
+  [Commits on your              [Everyone's commits        [Full copy of
+   machine only]                 sync here]                 project here]</pre>
+  </div>
+
+  <h3>What Files Does Git Create?</h3>
+  <p>When you run <code>git init</code>, Git creates a hidden <code>.git</code> folder. <strong>Never edit this manually</strong> — Git manages it automatically.</p>
+  <pre>your-project/
+├── src/
+│   └── main.py          ← Your actual code
+├── README.md
+└── .git/                ← Git's database (hands off! 🚫)
+    ├── objects/         ← Every version of every file (as snapshots)
+    ├── refs/            ← Pointers to branches and tags
+    ├── HEAD             ← Which branch you're on right now
+    ├── config           ← Local repository settings
+    ├── COMMIT_EDITMSG   ← Your last commit message
+    └── hooks/           ← Optional scripts that run on Git events</pre>
+
+  <h3>What Should (and Shouldn't) Go in Git?</h3>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>✅ Include in Git</th><th>❌ Never Include</th></tr></thead>
+      <tbody>
+        <tr><td>Source code (.py, .js, .java, .html)</td><td>Passwords, API keys, <code>.env</code> files</td></tr>
+        <tr><td>README.md and documentation</td><td><code>node_modules/</code>, <code>venv/</code>, <code>.vscode/</code></td></tr>
+        <tr><td>Configuration files (non-secret)</td><td>Compiled/built files (<code>__pycache__</code>, <code>.o</code>, <code>dist/</code>)</td></tr>
+        <tr><td>Database schemas (structure, not data)</td><td>Large binary files (videos, raw datasets)</td></tr>
+        <tr><td>Tests and test data</td><td>IDE-specific settings (<code>.idea/</code>)</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- SECTION 4: SETUP -->
+<!-- ══════════════════════════════════════════════ -->
+<section class="section" id="s4">
+  <div class="section-header">
+    <div class="section-icon" style="background:#fef3c7">⚙️</div>
+    <div>
+      <div class="num">SECTION 04</div>
+      <h2>Git Setup — Windows / Mac / Linux</h2>
+    </div>
+  </div>
+
+  <h3>Step 1 — Install Git on Your Machine</h3>
+  <div class="grid-3">
+    <div class="card card-top">
+      <h4>🪟 Windows</h4>
+      <ol>
+        <li>Go to <a href="https://git-scm.com" target="_blank">git-scm.com</a></li>
+        <li>Click "Download for Windows"</li>
+        <li>Run the installer (click Next for all options)</li>
+        <li>You now have <strong>Git Bash</strong> — your terminal</li>
+      </ol>
+    </div>
+    <div class="card card-top g">
+      <h4>🍎 macOS</h4>
+      <ol>
+        <li>Open Terminal (Spotlight → type Terminal)</li>
+        <li>Run: <code>git --version</code></li>
+        <li>Usually pre-installed! If not, macOS will prompt you</li>
+        <li>Or install via Homebrew: <code>brew install git</code></li>
+      </ol>
+    </div>
+    <div class="card card-top y">
+      <h4>🐧 Linux</h4>
+      <ol>
+        <li>Ubuntu/Debian: <code>sudo apt install git</code></li>
+        <li>Fedora: <code>sudo dnf install git</code></li>
+        <li>Arch: <code>sudo pacman -S git</code></li>
+        <li>Done!</li>
+      </ol>
+    </div>
+  </div>
+
+  <h3>Step 2 — Basic CMD to Verify & Configure Git</h3>
+  <div class="terminal">
+    <div class="terminal-bar"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div><span class="label">Terminal — Git Setup</span></div>
+    <div class="terminal-body">
+      <span class="t-comment"># Check Git is installed correctly</span><br>
+      <span class="t-prompt">$ </span><span class="t-cmd">git --version</span><br>
+      <span class="t-out">git version 2.43.0</span><br><br>
+      <span class="t-comment"># Tell Git who you are (one-time setup — use your real name &amp; email)</span><br>
+      <span class="t-prompt">$ </span><span class="t-cmd">git config --global user.name "Rahul Kumar"</span><br>
+      <span class="t-prompt">$ </span><span class="t-cmd">git config --global user.email "rahul@example.com"</span><br><br>
+      <span class="t-comment"># Set VS Code as your default editor</span><br>
+      <span class="t-prompt">$ </span><span class="t-cmd">git config --global core.editor "code --wait"</span><br><br>
+      <span class="t-comment"># Verify all settings</span><br>
+      <span class="t-prompt">$ </span><span class="t-cmd">git config --list</span><br>
+      <span class="t-out">user.name=Rahul Kumar</span><br>
+      <span class="t-out">user.email=rahul@example.com</span><br>
+      <span class="t-out">core.editor=code --wait</span>
+    </div>
+  </div>
+
+  <div class="box box-red">
+    <h4>⚠️ Email Must Match Your GitHub Account</h4>
+    <p>When you create a GitHub account, use the <strong>exact same email</strong> you set here. This is how GitHub links your commits to your profile and shows green contribution dots on your profile page.</p>
+  </div>
+
+  <h3>Step 3 — Create a GitHub Account</h3>
+  <div class="steps">
+    <div class="step"><div class="step-num">1</div><div class="step-body"><h4>Go to <a href="https://github.com" target="_blank">github.com</a></h4><p>Click "Sign up" — it's free.</p></div></div>
+    <div class="step"><div class="step-num">2</div><div class="step-body"><h4>Choose a Professional Username</h4><p>Use your real name if possible: <code>rahul-kumar</code> or <code>rahulkumar</code>. Recruiters will see this in your portfolio URL: <code>github.com/rahul-kumar</code></p></div></div>
+    <div class="step"><div class="step-num">3</div><div class="step-body"><h4>Verify Your Email</h4><p>GitHub sends a confirmation email — click the link inside it.</p></div></div>
+    <div class="step"><div class="step-num">4</div><div class="step-body"><h4>Set Up Your Profile</h4><p>Add a photo, bio, and your college. A complete profile looks professional to recruiters.</p></div></div>
+  </div>
+
+  <h3>Step 4 — Create a Git Profile README on GitHub</h3>
+  <div class="box box-purple">
+    <h4>🌟 GitHub Profile README — Your Developer Business Card</h4>
+    <p>GitHub has a special secret repo: create a repo with your <strong>exact username</strong> as the repo name. The README.md inside it shows up on your GitHub profile page for everyone to see!</p>
+  </div>
+  <div class="steps">
+    <div class="step"><div class="step-num">1</div><div class="step-body"><h4>Create a new repo named after yourself</h4><p>Go to GitHub → New Repository → Name it <code>rahul-kumar</code> (your username) → Check ✅ "Add a README file" → Create.</p></div></div>
+    <div class="step"><div class="step-num">2</div><div class="step-body"><h4>Edit the README.md</h4><p>Write about yourself: your skills, projects, college, and contact. This is shown on your public profile!</p></div></div>
+    <div class="step"><div class="step-num">3</div><div class="step-body"><h4>Commit the changes</h4><p>Click "Commit changes" on GitHub. Visit your profile — your README is live! 🎉</p></div></div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- SECTION 5: WAYS TO UPLOAD REPOS -->
+<!-- ══════════════════════════════════════════════ -->
+<section class="section" id="s5">
+  <div class="section-header">
+    <div class="section-icon" style="background:#d1fae5">🚀</div>
+    <div>
+      <div class="num">SECTION 05</div>
+      <h2>Ways to Manage &amp; Upload Repos to GitHub</h2>
+    </div>
+  </div>
+
+  <p>There are <strong>two main approaches</strong> to get your code onto GitHub — choose based on whether you start on GitHub or on your local machine.</p>
+
+  <div class="grid-2">
+    <div class="card card-top">
+      <h4>🅰️ Method 1 — Remote First (Create on GitHub, Clone Locally)</h4>
+      <p><strong>When to use:</strong> You're starting a brand-new project. Most beginner-friendly.</p>
+      <p><strong>Flow:</strong> Create repo on GitHub → Copy the URL → Clone it to your laptop → Start coding.</p>
+    </div>
+    <div class="card card-top g">
+      <h4>🅱️ Method 2 — Local First (Create Locally, Push to GitHub)</h4>
+      <p><strong>When to use:</strong> You already have a folder with code on your laptop and want to put it on GitHub.</p>
+      <p><strong>Flow:</strong> <code>git init</code> locally → Create empty repo on GitHub → Connect them → Push.</p>
+    </div>
+  </div>
+
+  <h3>Method 1 — Create Remote Repo First, Then Clone</h3>
+  <div class="steps">
+    <div class="step"><div class="step-num">1</div><div class="step-body"><h4>Create a repo on GitHub</h4><p>Go to GitHub → click <strong>+</strong> → New Repository → give it a name → check ✅ "Add a README file" → click <strong>Create Repository</strong>.</p></div></div>
+    <div class="step"><div class="step-num">2</div><div class="step-body"><h4>Copy the repo URL</h4><p>Click the green <strong>Code</strong> button → Copy the HTTPS or SSH URL.</p></div></div>
+    <div class="step"><div class="step-num">3</div><div class="step-body"><h4>Clone it to your laptop</h4><p>This downloads the entire repo to your machine, already connected to GitHub.</p></div></div>
+  </div>
+  <div class="terminal">
+    <div class="terminal-bar"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div><span class="label">Method 1 — Clone from GitHub</span></div>
+    <div class="terminal-body">
+      <span class="t-comment"># Navigate to where you want the project folder</span><br>
+      <span class="t-prompt">$ </span><span class="t-cmd">cd Desktop</span><br><br>
+      <span class="t-comment"># Clone the repo — this creates a folder with all the files</span><br>
+      <span class="t-prompt">$ </span><span class="t-cmd">git clone https://github.com/rahul-kumar/my-project.git</span><br>
+      <span class="t-out">Cloning into 'my-project'...</span><br>
+      <span class="t-out">remote: Enumerating objects: 3, done.</span><br>
+      <span class="t-out">✓ Done! Folder 'my-project' created.</span><br><br>
+      <span class="t-prompt">$ </span><span class="t-cmd">cd my-project</span><br>
+      <span class="t-comment"># You're inside! Start coding. The remote is already connected.</span>
+    </div>
+  </div>
+  <div class="box box-green">
+    <h4>✅ Why This Method is Easier for Beginners</h4>
+    <p>The repo is automatically connected to GitHub — no need to run <code>git remote add origin</code>. Just clone and start coding!</p>
+  </div>
+
+  <h3>Method 2 — Create Local Repo First, Push to GitHub</h3>
+  <div class="steps">
+    <div class="step"><div class="step-num">1</div><div class="step-body"><h4>Create a project folder locally</h4><p><code>mkdir my-project</code> then <code>cd my-project</code></p></div></div>
+    <div class="step"><div class="step-num">2</div><div class="step-body"><h4>Initialize Git</h4><p><code>git init</code> — Git now tracks this folder.</p></div></div>
+    <div class="step"><div class="step-num">3</div><div class="step-body"><h4>Make your first commit</h4><p>Add a file, stage it, commit it.</p></div></div>
+    <div class="step"><div class="step-num">4</div><div class="step-body"><h4>Create an empty repo on GitHub</h4><p>Go to GitHub → New Repository → <strong>do NOT</strong> check README → Create.</p></div></div>
+    <div class="step"><div class="step-num">5</div><div class="step-body"><h4>Connect local to GitHub and push</h4><p>Run the commands GitHub shows you on screen.</p></div></div>
+  </div>
+  <div class="terminal">
+    <div class="terminal-bar"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div><span class="label">Method 2 — Local First, Push to GitHub</span></div>
+    <div class="terminal-body">
+      <span class="t-comment"># Create folder and initialize Git</span><br>
+      <span class="t-prompt">$ </span><span class="t-cmd">mkdir my-project &amp;&amp; cd my-project</span><br>
+      <span class="t-prompt">$ </span><span class="t-cmd">git init</span><br>
+      <span class="t-out">Initialized empty Git repository in .git/</span><br><br>
+      <span class="t-comment"># Create first file and commit</span><br>
+      <span class="t-prompt">$ </span><span class="t-cmd">echo "# My Project" &gt; README.md</span><br>
+      <span class="t-prompt">$ </span><span class="t-cmd">git add README.md</span><br>
+      <span class="t-prompt">$ </span><span class="t-cmd">git commit -m "Initial commit: add README"</span><br>
+      <span class="t-out">[main (root-commit) a1b2c3d] Initial commit</span><br><br>
+      <span class="t-comment"># Connect your local repo to the GitHub repo you just created</span><br>
+      <span class="t-prompt">$ </span><span class="t-cmd">git remote add origin https://github.com/rahul-kumar/my-project.git</span><br><br>
+      <span class="t-comment"># Verify connection</span><br>
+      <span class="t-prompt">$ </span><span class="t-cmd">git remote -v</span><br>
+      <span class="t-out">origin  https://github.com/rahul-kumar/my-project.git (fetch)</span><br>
+      <span class="t-out">origin  https://github.com/rahul-kumar/my-project.git (push)</span><br><br>
+      <span class="t-comment"># Push to GitHub for the first time</span><br>
+      <span class="t-prompt">$ </span><span class="t-cmd">git push -u origin main</span><br>
+      <span class="t-out">Branch 'main' set up to track remote branch 'main' from 'origin'.</span><br>
+      <span class="t-out">✓ Your code is now on GitHub!</span>
+    </div>
+  </div>
+
+  <h3>Git CMD vs VS Code GitHub Setup</h3>
+  <div class="grid-2">
+    <div class="card card-top">
+      <h4>🖥️ Command Line Git</h4>
+      <p>You type Git commands in a terminal (Git Bash on Windows, Terminal on Mac/Linux). Full control, works anywhere, essential skill for all developers.</p>
+      <p><strong>Best for:</strong> All developers — must learn this.</p>
+    </div>
+    <div class="card card-top p">
+      <h4>🔷 VS Code Built-in GitHub</h4>
+      <p>VS Code has a built-in Source Control panel (the branch icon on the left sidebar). You can stage, commit, and push with mouse clicks — no terminal needed.</p>
+      <p><strong>Best for:</strong> Beginners who want a visual approach alongside learning CLI.</p>
+    </div>
+  </div>
+  <div class="box box-teal">
+    <h4>🔷 How to Use VS Code for Git</h4>
+    <p>1. Open your project folder in VS Code.<br>
+    2. Click the <strong>Source Control icon</strong> (branch icon) in the left sidebar.<br>
+    3. Make changes to files — they appear in the "Changes" list automatically.<br>
+    4. Click <strong>+</strong> next to a file to stage it (same as <code>git add</code>).<br>
+    5. Type a message in the box at the top and click <strong>✓ Commit</strong>.<br>
+    6. Click the <strong>⋯ menu</strong> → Push (same as <code>git push</code>).</p>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- SECTION 6: BASIC COMMANDS -->
+<!-- ══════════════════════════════════════════════ -->
+<section class="section" id="s6">
+  <div class="section-header">
+    <div class="section-icon" style="background:#fce7f3">💻</div>
+    <div>
+      <div class="num">SECTION 06</div>
+      <h2>Basic Commands — Terminal &amp; Git</h2>
+    </div>
+  </div>
+
+  <h3>Terminal Navigation Commands</h3>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Command</th><th>What it Does</th><th>Example</th></tr></thead>
+      <tbody>
+        <tr><td><code>pwd</code></td><td>Print Working Directory — shows your current location</td><td><code>pwd</code> → <code>/home/rahul/Desktop</code></td></tr>
+        <tr><td><code>ls</code></td><td>List files and folders in current directory</td><td><code>ls</code></td></tr>
+        <tr><td><code>ls -la</code></td><td>List all files including hidden ones (like <code>.git</code>)</td><td><code>ls -la</code></td></tr>
+        <tr><td><code>cd</code></td><td>Change Directory — navigate into a folder</td><td><code>cd Desktop</code></td></tr>
+        <tr><td><code>cd ..</code></td><td>Go up one level (parent folder)</td><td><code>cd ..</code></td></tr>
+        <tr><td><code>mkdir</code></td><td>Make a new directory/folder</td><td><code>mkdir my-project</code></td></tr>
+        <tr><td><code>echo</code></td><td>Print text or write text to a file</td><td><code>echo "Hello" &gt; hello.txt</code></td></tr>
+        <tr><td><code>sudo</code></td><td>Run a command with admin/superuser privileges</td><td><code>sudo apt install git</code></td></tr>
+        <tr><td><code>touch</code></td><td>Create an empty file</td><td><code>touch .gitkeep</code></td></tr>
+        <tr><td><code>cat</code></td><td>Show contents of a file in the terminal</td><td><code>cat README.md</code></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Core Git Commands — Daily Use</h3>
+  <div class="terminal">
+    <div class="terminal-bar"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div><span class="label">Essential Git Commands</span></div>
+    <div class="terminal-body">
+      <span class="t-comment"># ─── START A PROJECT ───────────────────────────</span><br>
+      <span class="t-prompt">$ </span><span class="t-cmd">git init</span><br>
+      <span class="t-out">Initialized empty Git repository in .git/</span><br><br>
+
+      <span class="t-comment"># ─── CHECK STATUS ──────────────────────────────</span><br>
+      <span class="t-prompt">$ </span><span class="t-cmd">git status</span><br>
+      <span class="t-out">On branch main</span><br>
+      <span class="t-out">Untracked files: login.py, styles.css</span><br><br>
+
+      <span class="t-comment"># ─── STAGE FILES ───────────────────────────────</span><br>
+      <span class="t-prompt">$ </span><span class="t-cmd">git add login.py</span><span class="t-comment">      # Stage one specific file</span><br>
+      <span class="t-prompt">$ </span><span class="t-cmd">git add .</span><span class="t-comment">             # Stage ALL changed files</span><br>
+      <span class="t-prompt">$ </span><span class="t-cmd">git add *.css</span><span class="t-comment">         # Stage all CSS files</span><br><br>
+
+      <span class="t-comment"># ─── COMMIT (SAVE A SNAPSHOT) ──────────────────</span><br>
+      <span class="t-prompt">$ </span><span class="t-cmd">git commit -m "Add login page with validation"</span><br>
+      <span class="t-out">[main a1b2c3d] Add login page with validation</span><br>
+      <span class="t-out"> 2 files changed, 47 insertions(+)</span><br><br>
+
+      <span class="t-comment"># ─── PUSH TO GITHUB ────────────────────────────</span><br>
+      <span class="t-prompt">$ </span><span class="t-cmd">git push origin main</span><span class="t-comment">  # Upload commits to GitHub</span><br>
+      <span class="t-out">To https://github.com/rahul-kumar/my-project.git</span><br>
+      <span class="t-out">   a1b2c3d..9e8f7g6  main → main</span><br><br>
+
+      <span class="t-comment"># ─── CLONE A REPO ──────────────────────────────</span><br>
+      <span class="t-prompt">$ </span><span class="t-cmd">git clone https://github.com/username/repo.git</span><br>
+      <span class="t-out">Cloning into 'repo'...</span>
+    </div>
+  </div>
+
+  <h3>The Three Stages of Git — Most Important Concept!</h3>
+  <div class="diagram">
+    <div class="diagram-title">📊 Working Directory → Staging Area → Repository</div>
+    <pre style="background:transparent;border:none;padding:0;color:var(--text);">  ┌──────────────────┐    git add     ┌──────────────────┐   git commit   ┌──────────────────┐
+  │  Working Directory│ ─────────────► │   Staging Area   │ ──────────────►│  Repository (.git)│
+  │  (Your files)    │                │  (Prepared zone) │                │  (Permanent save) │
+  │                  │                │                  │                │                  │
+  │  You freely edit │                │ You choose which │                │ Git saves snapshot│
+  │  files here      │                │ changes to save  │                │ forever here      │
+  └──────────────────┘                └──────────────────┘                └──────────────────┘
+         ↑                                                                        │
+         └──────────────────────── git restore ←────────────────────────────────┘
+                                    (undo changes)</pre>
+  </div>
+
+  <div class="box box-yellow">
+    <h4>📖 Analogy — The Post Office</h4>
+    <p><strong>Working Directory</strong> = Your desk where you write letters.<br>
+    <strong>Staging Area</strong> = The envelope — you choose which letters to put inside.<br>
+    <strong>Commit (Repository)</strong> = Sealing and posting the envelope — it's sent and saved permanently.</p>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- SECTION 7: SPECIAL FILES -->
+<!-- ══════════════════════════════════════════════ -->
+<section class="section" id="s7">
+  <div class="section-header">
+    <div class="section-icon" style="background:#fef9c3">📄</div>
+    <div>
+      <div class="num">SECTION 07</div>
+      <h2>Git Special Files</h2>
+    </div>
+  </div>
+
+  <h3>1. <code>.gitignore</code> — Tell Git What to Skip</h3>
+  <div class="box box-yellow">
+    <h4>📖 Analogy — Packing a Suitcase</h4>
+    <p>You're packing for a trip. You want your clothes — but NOT your household trash or private diary. <code>.gitignore</code> is a checklist you give Git that says: <em>"Do NOT pack these items."</em></p>
+  </div>
+  <p>Create a file called <code>.gitignore</code> in your project root:</p>
+  <div class="terminal">
+    <div class="terminal-bar"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div><span class="label">.gitignore — Example File</span></div>
+    <div class="terminal-body">
+      <span class="t-comment"># Secret files — NEVER push these to GitHub!</span><br>
+      <span class="t-cmd">.env</span><br>
+      <span class="t-cmd">secrets.txt</span><br>
+      <span class="t-cmd">config/database.yml</span><br><br>
+      <span class="t-comment"># Dependency folders (can be reinstalled anytime)</span><br>
+      <span class="t-cmd">node_modules/</span><br>
+      <span class="t-cmd">venv/</span><br>
+      <span class="t-cmd">.venv/</span><br><br>
+      <span class="t-comment"># Compiled/generated files</span><br>
+      <span class="t-cmd">__pycache__/</span><br>
+      <span class="t-cmd">*.pyc</span><br>
+      <span class="t-cmd">dist/</span><br>
+      <span class="t-cmd">build/</span><br><br>
+      <span class="t-comment"># IDE settings</span><br>
+      <span class="t-cmd">.vscode/</span><br>
+      <span class="t-cmd">.idea/</span><br>
+      <span class="t-cmd">*.DS_Store</span><span class="t-comment">     # Mac junk file</span>
+    </div>
+  </div>
+  <div class="box box-green">
+    <h4>💡 Pro Tip: gitignore.io</h4>
+    <p>Go to <strong>gitignore.io</strong> — type your language/framework (e.g. "Python", "Node", "React") and it generates the perfect <code>.gitignore</code> for you automatically!</p>
+  </div>
+
+  <h3>2. <code>.gitattributes</code> — Consistent Formatting Across Machines</h3>
+  <div class="box box-orange">
+    <h4>📖 Analogy — Writing Style Guide</h4>
+    <p>Imagine two people writing a book together — one uses Windows (which adds a special invisible character at the end of every line) and one uses Mac. The code looks different even when it's the same. <code>.gitattributes</code> is a rule book that forces every computer to format files the same way.</p>
+  </div>
+  <pre># .gitattributes — Place in your project root
+
+# Auto-detect text files and handle line endings
+* text=auto
+
+# Force all code files to use Linux/Mac line endings (LF)
+*.js   text eol=lf
+*.html text eol=lf
+*.css  text eol=lf
+*.py   text eol=lf
+*.json text eol=lf
+
+# Tell Git these are binary — don't try to merge them as text
+*.png  binary
+*.jpg  binary
+*.gif  binary
+*.zip  binary
+*.pdf  binary</pre>
+
+  <h3>3. <code>.gitkeep</code> — Keep Empty Folders in Git</h3>
+  <div class="box box-blue">
+    <h4>📖 Analogy — The Rock in the Box</h4>
+    <p>Git is like a mail carrier that only delivers boxes with something inside. If you give Git an empty folder, it ignores it. <code>.gitkeep</code> is a tiny empty file (a "rock") you put inside an empty folder so Git will track and carry it.</p>
+  </div>
+  <div class="terminal">
+    <div class="terminal-bar"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div><span class="label">.gitkeep — How to Use</span></div>
+    <div class="terminal-body">
+      <span class="t-comment"># You have an uploads/ folder that should exist but is empty</span><br>
+      <span class="t-prompt">$ </span><span class="t-cmd">mkdir -p public/uploads</span><br>
+      <span class="t-prompt">$ </span><span class="t-cmd">touch public/uploads/.gitkeep</span><br><br>
+      <span class="t-comment"># Now git will track the folder even though it's empty</span><br>
+      <span class="t-prompt">$ </span><span class="t-cmd">git add public/uploads/.gitkeep</span><br>
+      <span class="t-prompt">$ </span><span class="t-cmd">git commit -m "Keep uploads folder structure in repo"</span><br>
+      <span class="t-out">[main 7f3d2a1] Keep uploads folder structure in repo</span>
+    </div>
+  </div>
+  <pre>my-project/
+├── public/
+│   └── uploads/
+│       └── .gitkeep    ← This tiny blank file forces Git to track the folder
+├── src/
+│   └── main.py
+└── README.md</pre>
+</section>
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- SECTION 8: DAILY WORKFLOW -->
+<!-- ══════════════════════════════════════════════ -->
+<section class="section" id="s8">
+  <div class="section-header">
+    <div class="section-icon" style="background:#ecfdf5">🔁</div>
+    <div>
+      <div class="num">SECTION 08</div>
+      <h2>How to Work with Git — Daily Workflow</h2>
+    </div>
+  </div>
+
+  <h3>The Standard Developer Loop</h3>
+  <div class="flow">
+    <div class="flow-step">✏️ Edit Files</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step g">📦 git add</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step o">💾 git commit</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step p">☁️ git push</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step y" style="color:#000">🔄 Repeat</div>
+  </div>
+
+  <div class="terminal">
+    <div class="terminal-bar"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div><span class="label">Complete Daily Workflow</span></div>
+    <div class="terminal-body">
+      <span class="t-comment"># ── STEP 1: Start of day — get latest changes from team ──</span><br>
+      <span class="t-prompt">$ </span><span class="t-cmd">git pull origin main</span><br>
+      <span class="t-out">Already up to date.</span><br><br>
+      <span class="t-comment"># ── STEP 2: Edit your files in VS Code ──────────────────</span><br>
+      <span class="t-comment"># (open editor, write code, save files)</span><br><br>
+      <span class="t-comment"># ── STEP 3: Check what changed ──────────────────────────</span><br>
+      <span class="t-prompt">$ </span><span class="t-cmd">git status</span><br>
+      <span class="t-out">On branch main</span><br>
+      <span class="t-out">Modified: login.py</span><br>
+      <span class="t-out">Untracked: dashboard.html</span><br><br>
+      <span class="t-comment"># ── STEP 4: Stage your changes ──────────────────────────</span><br>
+      <span class="t-prompt">$ </span><span class="t-cmd">git add .</span><br><br>
+      <span class="t-comment"># ── STEP 5: Commit with a clear message ─────────────────</span><br>
+      <span class="t-prompt">$ </span><span class="t-cmd">git commit -m "Add login page validation and fix redirect bug"</span><br>
+      <span class="t-out">[main 9f8e7d6] Add login page validation and fix redirect bug</span><br><br>
+      <span class="t-comment"># ── STEP 6: Push to GitHub ───────────────────────────────</span><br>
+      <span class="t-prompt">$ </span><span class="t-cmd">git push origin main</span><br>
+      <span class="t-out">To github.com:rahul-kumar/my-project.git</span><br>
+      <span class="t-out">  main → main ✓</span>
+    </div>
+  </div>
+
+  <h3>How to Work Together with Git (Team Rules)</h3>
+
+  <div class="box box-green">
+    <h4>✅ Rule 1 — Never Push Directly to Main</h4>
+    <p>The <code>main</code> branch should always be working, tested code. Always create a feature branch, work there, and only merge after review.</p>
+  </div>
+  <div class="box box-green">
+    <h4>✅ Rule 2 — Always Pull Before You Start</h4>
+    <p>Run <code>git pull origin main</code> every morning before writing a single line. This prevents conflicts with your teammates' work.</p>
+  </div>
+  <div class="box box-green">
+    <h4>✅ Rule 3 — Commit Frequently, With Clear Messages</h4>
+    <p>Commit every 30–60 minutes. Don't wait until the end of the day. More commits = finer history = easier debugging.</p>
+    <p>❌ Bad: <code>"fixed stuff"</code> &nbsp;&nbsp; ✅ Good: <code>"Fix null pointer when login form is submitted with empty password"</code></p>
+  </div>
+  <div class="box box-green">
+    <h4>✅ Rule 4 — One Feature = One Branch = One Pull Request</h4>
+    <p>Keep each branch focused. Don't mix login changes and dashboard changes in the same branch. Small, focused branches are easier to review and merge.</p>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- SECTION 9: BRANCHING -->
+<!-- ══════════════════════════════════════════════ -->
+<section class="section" id="s9">
+  <div class="section-header">
+    <div class="section-icon" style="background:#e0f2fe">🌿</div>
+    <div>
+      <div class="num">SECTION 09</div>
+      <h2>Git Branch Commands</h2>
+    </div>
+  </div>
+
+  <div class="box box-blue">
+    <h4>📖 What is a Branch?</h4>
+    <p>A branch is a <strong>parallel version of your project</strong>. Think of it like a parallel universe — you can experiment in your universe without affecting the main one. When your experiment works, you merge it back.</p>
+    <p>📖 <em>Like a book draft — you write a new chapter on separate paper. If you like it, you paste it in. If you hate it, you throw the paper away — the original book is untouched.</em></p>
+  </div>
+
+  <div class="diagram">
+    <div class="diagram-title">Branching Visualization</div>
+    <pre style="background:transparent;border:none;padding:0;color:var(--text);">  main:              A ──── B ──── C ──────────────── G (merge)
+                                   \                  /
+  feature-login:                    D ──── E ──── F
+                                   (Rahul works here safely)</pre>
+  </div>
+
+  <h3>Branch Commands</h3>
+
+  <div class="terminal">
+    <div class="terminal-bar"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div><span class="label">Git Branch Commands</span></div>
+    <div class="terminal-body">
+      <span class="t-comment"># ── LIST BRANCHES ──────────────────────────────────────</span><br>
+      <span class="t-prompt">$ </span><span class="t-cmd">git branch</span><br>
+      <span class="t-out">* main</span><span class="t-comment">          ← * means you're currently on this branch</span><br>
+      <span class="t-out">  feature-login</span><br><br>
+
+      <span class="t-prompt">$ </span><span class="t-cmd">git branch -a</span><span class="t-comment">   # Show ALL branches including remote</span><br>
+      <span class="t-out">* main</span><br>
+      <span class="t-out">  feature-login</span><br>
+      <span class="t-out">  remotes/origin/main</span><br>
+      <span class="t-out">  remotes/origin/feature-login</span><br><br>
+
+      <span class="t-comment"># ── CREATE A NEW BRANCH ────────────────────────────────</span><br>
+      <span class="t-prompt">$ </span><span class="t-cmd">git branch feature-dashboard</span><span class="t-comment">    # Creates branch, stays on current</span><br>
+      <span class="t-prompt">$ </span><span class="t-cmd">git checkout -b feature-payment</span><span class="t-comment"> # Creates AND switches to new branch</span><br>
+      <span class="t-prompt">$ </span><span class="t-cmd">git switch -c feature-api</span><span class="t-comment">       # Modern way to create + switch</span><br><br>
+
+      <span class="t-comment"># ── SWITCH BETWEEN BRANCHES ────────────────────────────</span><br>
+      <span class="t-prompt">$ </span><span class="t-cmd">git checkout main</span><span class="t-comment">       # Old way — still works</span><br>
+      <span class="t-prompt">$ </span><span class="t-cmd">git switch main</span><span class="t-comment">         # New, cleaner way (Git 2.23+)</span><br><br>
+
+      <span class="t-comment"># ── DELETE A BRANCH ────────────────────────────────────</span><br>
+      <span class="t-prompt">$ </span><span class="t-cmd">git branch -d feature-login</span><span class="t-comment">    # Safe delete (only if merged)</span><br>
+      <span class="t-prompt">$ </span><span class="t-cmd">git branch -D feature-login</span><span class="t-comment">    # Force delete even if not merged</span><br>
+      <span class="t-prompt">$ </span><span class="t-cmd">git push origin --delete feature-login</span><span class="t-comment">  # Delete from GitHub too</span>
+    </div>
+  </div>
+
+  <h3>git checkout vs git switch — What's the Difference?</h3>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Command</th><th>What It Does</th><th>When to Use</th></tr></thead>
+      <tbody>
+        <tr><td><code>git checkout branch-name</code></td><td>Switch to an existing branch (old syntax)</td><td>Works in all Git versions</td></tr>
+        <tr><td><code>git checkout -b new-branch</code></td><td>Create AND switch to new branch (old syntax)</td><td>Very common in tutorials</td></tr>
+        <tr><td><code>git switch branch-name</code></td><td>Switch to existing branch (new, cleaner syntax)</td><td>Git 2.23+ preferred</td></tr>
+        <tr><td><code>git switch -c new-branch</code></td><td>Create AND switch to new branch (new syntax)</td><td>Modern way — recommended</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="box box-purple">
+    <h4>💡 Tip</h4>
+    <p>Both <code>git checkout</code> and <code>git switch</code> work. Many online tutorials still use <code>checkout</code> — learn both but prefer <code>switch</code> for new projects as it's clearer and less confusing.</p>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- SECTION 10: INTERMEDIATE COMMANDS -->
+<!-- ══════════════════════════════════════════════ -->
+<section class="section" id="s10">
+  <div class="section-header">
+    <div class="section-icon" style="background:#fff7ed">🔗</div>
+    <div>
+      <div class="num">SECTION 10</div>
+      <h2>Intermediate Git Commands</h2>
+    </div>
+  </div>
+
+  <h3>git remote — Managing Connections</h3>
+  <div class="terminal">
+    <div class="terminal-bar"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div><span class="label">git remote</span></div>
+    <div class="terminal-body">
+      <span class="t-comment"># View your remote connections</span><br>
+      <span class="t-prompt">$ </span><span class="t-cmd">git remote -v</span><br>
+      <span class="t-out">origin  https://github.com/rahul-kumar/project.git (fetch)</span><br>
+      <span class="t-out">origin  https://github.com/rahul-kumar/project.git (push)</span><br><br>
+      <span class="t-comment"># Add a new remote (connect to GitHub)</span><br>
+      <span class="t-prompt">$ </span><span class="t-cmd">git remote add origin https://github.com/username/repo.git</span><br><br>
+      <span class="t-comment"># Change the remote URL (e.g. if you renamed the repo on GitHub)</span><br>
+      <span class="t-prompt">$ </span><span class="t-cmd">git remote set-url origin https://github.com/username/new-name.git</span><br><br>
+      <span class="t-comment"># Remove a remote connection</span><br>
+      <span class="t-prompt">$ </span><span class="t-cmd">git remote remove origin</span>
+    </div>
+  </div>
+
+  <h3>git pull — Fetch + Merge in One Step</h3>
+  <div class="box box-blue">
+    <h4>📖 What git pull Does</h4>
+    <p><code>git pull</code> does TWO things in one command: (1) <strong>fetch</strong> — downloads new commits from GitHub, and (2) <strong>merge</strong> — integrates those commits into your current branch. It's the shortcut you use every morning.</p>
+  </div>
+  <div class="terminal">
+    <div class="terminal-bar"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div><span class="label">git pull</span></div>
+    <div class="terminal-body">
+      <span class="t-comment"># Download + merge latest changes from main branch</span><br>
+      <span class="t-prompt">$ </span><span class="t-cmd">git pull origin main</span><br>
+      <span class="t-out">remote: Enumerating objects: 5, done.</span><br>
+      <span class="t-out">Updating a1b2c3d..9e8f7g6</span><br>
+      <span class="t-out">Fast-forward: login.py | 3 +++</span><br><br>
+      <span class="t-comment"># If you're on main already, shortcut:</span><br>
+      <span class="t-prompt">$ </span><span class="t-cmd">git pull</span><br>
+    </div>
+  </div>
+
+  <h3>git fetch — Download Without Merging</h3>
+  <div class="box box-yellow">
+    <h4>📖 git fetch vs git pull</h4>
+    <p><code>git fetch</code> downloads new commits from GitHub <strong>but does NOT merge them</strong> into your code. It lets you see what changed before you decide to integrate it. Think of it as "look before you leap".</p>
+    <p>📖 <em>fetch = downloading a package at your door. pull = opening it and unpacking immediately.</em></p>
+  </div>
+  <div class="terminal">
+    <div class="terminal-bar"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div><span class="label">git fetch vs git pull</span></div>
+    <div class="terminal-body">
+      <span class="t-comment"># Download changes but don't apply them yet</span><br>
+      <span class="t-prompt">$ </span><span class="t-cmd">git fetch origin</span><br>
+      <span class="t-out">From github.com:rahul-kumar/project</span><br>
+      <span class="t-out">   a1b2c3d..9e8f7g6  main → origin/main</span><br><br>
+      <span class="t-comment"># Review what changed</span><br>
+      <span class="t-prompt">$ </span><span class="t-cmd">git log main..origin/main --oneline</span><br>
+      <span class="t-out">9e8f7g6 Add payment API endpoint (Priya)</span><br><br>
+      <span class="t-comment"># Now merge when you're ready</span><br>
+      <span class="t-prompt">$ </span><span class="t-cmd">git merge origin/main</span>
+    </div>
+  </div>
+
+  <h3>git merge — Combine Branches</h3>
+  <div class="terminal">
+    <div class="terminal-bar"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div><span class="label">git merge</span></div>
+    <div class="terminal-body">
+      <span class="t-comment"># Switch to main first</span><br>
+      <span class="t-prompt">$ </span><span class="t-cmd">git checkout main</span><br><br>
+      <span class="t-comment"># Merge Rahul's feature branch into main</span><br>
+      <span class="t-prompt">$ </span><span class="t-cmd">git merge feature-dashboard</span><br>
+      <span class="t-out">Updating a1b2c3d..9e8f7g6</span><br>
+      <span class="t-out">Fast-forward</span><br>
+      <span class="t-out"> dashboard.html | 45 +++++++++</span><br><br>
+      <span class="t-comment"># If there's a conflict Git will tell you:</span><br>
+      <span class="t-err">CONFLICT (content): Merge conflict in config.py</span><br>
+      <span class="t-err">Automatic merge failed; fix conflicts then commit.</span><br><br>
+      <span class="t-comment"># Open config.py, find conflict markers, fix them, then:</span><br>
+      <span class="t-prompt">$ </span><span class="t-cmd">git add config.py</span><br>
+      <span class="t-prompt">$ </span><span class="t-cmd">git commit -m "Resolve merge conflict in config.py"</span>
+    </div>
+  </div>
+
+  <div class="box box-orange">
+    <h4>⚠️ What a Merge Conflict Looks Like</h4>
+    <p>When two people edit the same line, Git shows both versions and asks you to decide:</p>
+    <pre style="margin:10px 0;font-size:12px;">
+&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD (your version)
+DATABASE_HOST = "localhost"
+=======
+DATABASE_HOST = "production-server"
+&gt;&gt;&gt;&gt;&gt;&gt;&gt; feature-api (their version)</pre>
+    <p>Delete the conflict markers (<code>&lt;&lt;&lt;</code>, <code>===</code>, <code>&gt;&gt;&gt;</code>) and keep the correct line. Then <code>git add</code> and <code>git commit</code>.</p>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- SECTION 11: ADVANCED COMMANDS -->
+<!-- ══════════════════════════════════════════════ -->
+<section class="section" id="s11">
+  <div class="section-header">
+    <div class="section-icon" style="background:#f5f3ff">🧠</div>
+    <div>
+      <div class="num">SECTION 11</div>
+      <h2>Advanced Git Commands</h2>
+    </div>
+  </div>
+
+  <h3>git log — View History</h3>
+  <div class="terminal">
+    <div class="terminal-bar"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div><span class="label">git log — See Your Project History</span></div>
+    <div class="terminal-body">
+      <span class="t-comment"># Simple one-line history</span><br>
+      <span class="t-prompt">$ </span><span class="t-cmd">git log --oneline</span><br>
+      <span class="t-out">9e8f7g6 Add payment API</span><br>
+      <span class="t-out">a1b2c3d Add login page</span><br>
+      <span class="t-out">7f3d2a1 Initial commit</span><br><br>
+
+      <span class="t-comment"># Visual graph showing branches and merges</span><br>
+      <span class="t-prompt">$ </span><span class="t-cmd">git log --oneline --graph --all</span><br>
+      <span class="t-out">*   9e8f7g6 (HEAD → main) Merge feature-login</span><br>
+      <span class="t-out">|\</span><br>
+      <span class="t-out">| * 5h4i3j2 (feature-login) Add login validation</span><br>
+      <span class="t-out">|/</span><br>
+      <span class="t-out">* a1b2c3d Initial commit</span><br><br>
+
+      <span class="t-comment"># Search commits by keyword</span><br>
+      <span class="t-prompt">$ </span><span class="t-cmd">git log --grep="login"</span><br>
+      <span class="t-comment"># Show commits by a specific author</span><br>
+      <span class="t-prompt">$ </span><span class="t-cmd">git log --author="Rahul"</span><br>
+      <span class="t-comment"># Show detailed changes in a commit</span><br>
+      <span class="t-prompt">$ </span><span class="t-cmd">git show a1b2c3d</span>
+    </div>
+  </div>
+
+  <h3>git diff — See Exactly What Changed</h3>
+  <div class="terminal">
+    <div class="terminal-bar"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div><span class="label">git diff</span></div>
+    <div class="terminal-body">
+      <span class="t-comment"># See unstaged changes (what you changed but haven't added yet)</span><br>
+      <span class="t-prompt">$ </span><span class="t-cmd">git diff</span><br>
+      <span class="t-err">- old line that was removed</span><br>
+      <span class="t-out">+ new line that was added</span><br><br>
+      <span class="t-comment"># See staged changes (what you git added, ready to commit)</span><br>
+      <span class="t-prompt">$ </span><span class="t-cmd">git diff --staged</span><br><br>
+      <span class="t-comment"># Compare two branches</span><br>
+      <span class="t-prompt">$ </span><span class="t-cmd">git diff main feature-login</span><br><br>
+      <span class="t-comment"># Compare two commits</span><br>
+      <span class="t-prompt">$ </span><span class="t-cmd">git diff a1b2c3d 9e8f7g6</span>
+    </div>
+  </div>
+
+  <h3>git stash — Pause Your Work Temporarily</h3>
+  <div class="box box-yellow">
+    <h4>📖 Analogy — Saving Your Game Mid-Level</h4>
+    <p>You're coding a new feature when your team lead says "critical bug — fix it NOW!" Your code is half-done — not ready to commit. <code>git stash</code> saves your work-in-progress in a temporary drawer so you can switch tasks immediately, then come back and pick up exactly where you left off.</p>
+  </div>
+  <div class="terminal">
+    <div class="terminal-bar"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div><span class="label">git stash</span></div>
+    <div class="terminal-body">
+      <span class="t-comment"># Save your half-done work (clears working directory)</span><br>
+      <span class="t-prompt">$ </span><span class="t-cmd">git stash</span><br>
+      <span class="t-out">Saved working directory and index state WIP on main</span><br><br>
+      <span class="t-prompt">$ </span><span class="t-cmd">git status</span><br>
+      <span class="t-out">nothing to commit, working tree clean</span><span class="t-comment">  ← clean slate!</span><br><br>
+      <span class="t-comment"># Fix the bug, commit, push...</span><br>
+      <span class="t-prompt">$ </span><span class="t-cmd">git commit -m "Critical: fix payment crash bug"</span><br><br>
+      <span class="t-comment"># Bring your stashed work back</span><br>
+      <span class="t-prompt">$ </span><span class="t-cmd">git stash pop</span><br>
+      <span class="t-out">Dropped stash@{0} — your changes are back! 🎉</span><br><br>
+      <span class="t-comment"># See all stashes saved</span><br>
+      <span class="t-prompt">$ </span><span class="t-cmd">git stash list</span><br>
+      <span class="t-out">stash@{0}: WIP on main: Add dashboard header</span>
+    </div>
+  </div>
+
+  <h3>git reset — Undo Commits</h3>
+  <div class="terminal">
+    <div class="terminal-bar"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div><span class="label">git reset --soft HEAD~1</span></div>
+    <div class="terminal-body">
+      <span class="t-comment"># Undo the last commit but KEEP your changes (files stay edited)</span><br>
+      <span class="t-prompt">$ </span><span class="t-cmd">git reset --soft HEAD~1</span><br>
+      <span class="t-out">Unstaged changes after reset: login.py</span><br>
+      <span class="t-comment"># Your code is still there, just un-committed — fix the message or add more</span><br><br>
+      <span class="t-comment"># Undo the last commit AND unstage (files stay but not staged)</span><br>
+      <span class="t-prompt">$ </span><span class="t-cmd">git reset --mixed HEAD~1</span><br><br>
+      <span class="t-comment"># ⚠️ DANGER: Undo commit AND delete your changes forever</span><br>
+      <span class="t-prompt">$ </span><span class="t-cmd">git reset --hard HEAD~1</span><br>
+      <span class="t-err">HEAD is now at a1b2c3d Previous commit (changes GONE)</span>
+    </div>
+  </div>
+
+  <h3>git tag — Mark Important Versions</h3>
+  <div class="terminal">
+    <div class="terminal-bar"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div><span class="label">git tag</span></div>
+    <div class="terminal-body">
+      <span class="t-comment"># Create a version tag (like v1.0, v2.1)</span><br>
+      <span class="t-prompt">$ </span><span class="t-cmd">git tag v1.0</span><br><br>
+      <span class="t-comment"># Tag with a message (annotated tag — preferred for releases)</span><br>
+      <span class="t-prompt">$ </span><span class="t-cmd">git tag -a v1.0 -m "First stable release"</span><br><br>
+      <span class="t-comment"># Push the tag to GitHub</span><br>
+      <span class="t-prompt">$ </span><span class="t-cmd">git push origin v1.0</span><br>
+      <span class="t-out">To github.com:rahul-kumar/project.git</span><br>
+      <span class="t-out"> * [new tag] v1.0 → v1.0</span><br><br>
+      <span class="t-comment"># Push ALL tags at once</span><br>
+      <span class="t-prompt">$ </span><span class="t-cmd">git push origin --tags</span><br><br>
+      <span class="t-comment"># List all tags</span><br>
+      <span class="t-prompt">$ </span><span class="t-cmd">git tag</span><br>
+      <span class="t-out">v1.0</span><br>
+      <span class="t-out">v1.1</span>
+    </div>
+  </div>
+
+  <h3>revert vs reset vs checkout — Key Differences</h3>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Command</th><th>What It Does</th><th>Safe to Use After Pushing?</th><th>Use Case</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><code>git revert &lt;id&gt;</code></td>
+          <td>Creates a <em>new commit</em> that undoes the changes of a previous commit. History stays intact.</td>
+          <td><span class="pill pill-green">✅ Yes — Safe</span></td>
+          <td>Undo something that's already on GitHub/in production</td>
+        </tr>
+        <tr>
+          <td><code>git reset HEAD~1</code></td>
+          <td>Moves the branch pointer back, <em>erasing</em> commits from history.</td>
+          <td><span class="pill pill-red">⚠️ No — Dangerous</span></td>
+          <td>Undo commits that are only on your local machine</td>
+        </tr>
+        <tr>
+          <td><code>git checkout &lt;file&gt;</code></td>
+          <td>Discards unsaved changes in a file, restoring it to the last commit.</td>
+          <td><span class="pill pill-green">✅ Always safe</span></td>
+          <td>Oops — throw away edits you haven't committed yet</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="box box-orange">
+    <h4>⚠️ Golden Rule of Undo</h4>
+    <p>If the commit is <strong>only on your laptop</strong> (not pushed) → use <code>git reset</code>.<br>
+    If the commit is <strong>already on GitHub</strong> → use <code>git revert</code> (it's safe, doesn't break teammates' history).</p>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- SECTION 12: GITHUB FEATURES -->
+<!-- ══════════════════════════════════════════════ -->
+<section class="section" id="s12">
+  <div class="section-header">
+    <div class="section-icon" style="background:#e0f2fe">🐱</div>
+    <div>
+      <div class="num">SECTION 12</div>
+      <h2>GitHub Features — Collaboration &amp; Community</h2>
+    </div>
+  </div>
+
+  <div class="gh-grid">
+    <div class="gh-card" style="background:#eff6ff;border-color:#bfdbfe;">
+      <div class="icon">⭐</div>
+      <h4>Star a Repository</h4>
+      <p>Like bookmarking a project you find useful. Stars show appreciation to creators and let you find repos later. A repo with many stars = popular &amp; trusted.</p>
+      <p><strong>How:</strong> Open any repo → click the <strong>⭐ Star</strong> button in the top right.</p>
+    </div>
+    <div class="gh-card" style="background:#f0fdf4;border-color:#bbf7d0;">
+      <div class="icon">🍴</div>
+      <h4>Fork a Repository</h4>
+      <p>Creates your own <em>personal copy</em> of someone else's project. You can freely change your fork without touching the original. Essential for contributing to open source.</p>
+      <p><strong>How:</strong> Open repo → click <strong>Fork</strong> button → it appears under your account.</p>
+    </div>
+    <div class="gh-card" style="background:#fef3c7;border-color:#fde68a;">
+      <div class="icon">🐛</div>
+      <h4>Raise an Issue</h4>
+      <p>Report a bug, suggest a feature, or ask a question about a project. Issues are public discussions tied to the repository.</p>
+      <p><strong>How:</strong> Repo → <strong>Issues</strong> tab → <strong>New Issue</strong> → describe the problem clearly.</p>
+    </div>
+    <div class="gh-card" style="background:#f5f3ff;border-color:#ddd6fe;">
+      <div class="icon">🔀</div>
+      <h4>Pull Request (PR)</h4>
+      <p>A request to merge your branch (or fork) into the main codebase. The team reviews your changes, leaves comments, requests edits, and eventually approves + merges.</p>
+      <p><strong>How:</strong> Push your branch → GitHub shows "Compare &amp; pull request" → fill details → submit.</p>
+    </div>
+    <div class="gh-card" style="background:#fff7ed;border-color:#fed7aa;">
+      <div class="icon">🤝</div>
+      <h4>Contributing to a Repo</h4>
+      <p>The standard open-source flow: <strong>Fork</strong> → Clone your fork → Create a branch → Make changes → Push → Open a PR to the original repo.</p>
+      <p>Most repos have a <code>CONTRIBUTING.md</code> file explaining how to contribute.</p>
+    </div>
+    <div class="gh-card" style="background:#ecfdf5;border-color:#a7f3d0;">
+      <div class="icon">⚙️</div>
+      <h4>Managing Pull Requests</h4>
+      <p>As a reviewer: read the code, leave inline comments, request changes, or approve. As the author: respond to comments, push updates, and the PR auto-updates.</p>
+      <p><strong>Merge options:</strong> Merge commit / Squash &amp; merge / Rebase &amp; merge.</p>
+    </div>
+  </div>
+
+  <h3>Full Open Source Contribution Workflow</h3>
+  <div class="steps">
+    <div class="step"><div class="step-num">1</div><div class="step-body"><h4>Fork the Repository</h4><p>Click Fork on GitHub → creates <code>your-username/project</code> as your own copy.</p></div></div>
+    <div class="step"><div class="step-num">2</div><div class="step-body"><h4>Clone YOUR Fork Locally</h4><p><code>git clone https://github.com/YOUR-USERNAME/project.git</code></p></div></div>
+    <div class="step"><div class="step-num">3</div><div class="step-body"><h4>Add Original as "upstream"</h4><p><code>git remote add upstream https://github.com/ORIGINAL-AUTHOR/project.git</code><br>This lets you pull future updates from the original.</p></div></div>
+    <div class="step"><div class="step-num">4</div><div class="step-body"><h4>Create a Feature Branch</h4><p><code>git checkout -b fix-typo-in-readme</code></p></div></div>
+    <div class="step"><div class="step-num">5</div><div class="step-body"><h4>Make Changes and Commit</h4><p>Edit files → <code>git add .</code> → <code>git commit -m "Fix typo in README"</code></p></div></div>
+    <div class="step"><div class="step-num">6</div><div class="step-body"><h4>Push to YOUR Fork</h4><p><code>git push origin fix-typo-in-readme</code></p></div></div>
+    <div class="step"><div class="step-num">7</div><div class="step-body"><h4>Open a Pull Request</h4><p>Go to the original repo on GitHub → GitHub detects your push → click <strong>"Compare &amp; pull request"</strong> → describe your changes → submit!</p></div></div>
+  </div>
+
+  <h3>SSH vs HTTPS — Which Should You Use?</h3>
+  <div class="grid-2">
+    <div class="card card-top">
+      <h4>🔒 HTTPS</h4>
+      <p><strong>Pros:</strong> Zero setup, works everywhere out of the box.</p>
+      <p><strong>Cons:</strong> GitHub asks for credentials every time (unless you use a credential manager).</p>
+      <p><strong>Best for:</strong> One-time cloning or unfamiliar computers.</p>
+    </div>
+    <div class="card card-top g">
+      <h4>🔑 SSH</h4>
+      <p><strong>Pros:</strong> Set up once → never type a password again. Faster and more secure.</p>
+      <p><strong>Cons:</strong> Needs 5-minute setup (generate key, add to GitHub).</p>
+      <p><strong>Best for:</strong> Your own laptop — the professional way.</p>
+    </div>
+  </div>
+  <div class="terminal">
+    <div class="terminal-bar"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div><span class="label">Set Up SSH Key (one-time)</span></div>
+    <div class="terminal-body">
+      <span class="t-comment"># Generate SSH key (accept defaults, press Enter)</span><br>
+      <span class="t-prompt">$ </span><span class="t-cmd">ssh-keygen -t ed25519 -C "rahul@example.com"</span><br>
+      <span class="t-out">Generating public/private ed25519 key pair...</span><br><br>
+      <span class="t-comment"># Copy the public key to clipboard</span><br>
+      <span class="t-prompt">$ </span><span class="t-cmd">cat ~/.ssh/id_ed25519.pub</span><br>
+      <span class="t-out">ssh-ed25519 AAAAC3Nza... rahul@example.com</span><br><br>
+      <span class="t-comment"># Then: GitHub → Settings → SSH Keys → New SSH Key → Paste it</span><br>
+      <span class="t-comment"># Test it:</span><br>
+      <span class="t-prompt">$ </span><span class="t-cmd">ssh -T git@github.com</span><br>
+      <span class="t-out">Hi rahul-kumar! You've successfully authenticated. 🎉</span>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- SECTION 13: CHEAT SHEET -->
+<!-- ══════════════════════════════════════════════ -->
+<section class="section" id="s13">
+  <div class="section-header">
+    <div class="section-icon" style="background:#fce7f3">📋</div>
+    <div>
+      <div class="num">SECTION 13</div>
+      <h2>Complete Command Cheat Sheet</h2>
+    </div>
+  </div>
+
+  <div class="cheat-grid">
+    <div class="cheat-card">
+      <div class="cheat-card-head" style="background:#4338ca;">⚙️ Setup (One-Time)</div>
+      <div class="cheat-card-body">
+        <div class="cheat-row"><span class="cheat-cmd">git config --global user.name "Name"</span><span class="cheat-desc">Set your name</span></div>
+        <div class="cheat-row"><span class="cheat-cmd">git config --global user.email "a@b.com"</span><span class="cheat-desc">Set email</span></div>
+        <div class="cheat-row"><span class="cheat-cmd">git config --list</span><span class="cheat-desc">View all config</span></div>
+        <div class="cheat-row"><span class="cheat-cmd">git --version</span><span class="cheat-desc">Check Git version</span></div>
+      </div>
+    </div>
+
+    <div class="cheat-card">
+      <div class="cheat-card-head" style="background:#065f46;">🚀 Start a Project</div>
+      <div class="cheat-card-body">
+        <div class="cheat-row"><span class="cheat-cmd">git init</span><span class="cheat-desc">Initialize new repo</span></div>
+        <div class="cheat-row"><span class="cheat-cmd">git clone &lt;url&gt;</span><span class="cheat-desc">Download repo from GitHub</span></div>
+        <div class="cheat-row"><span class="cheat-cmd">git remote add origin &lt;url&gt;</span><span class="cheat-desc">Connect to GitHub</span></div>
+        <div class="cheat-row"><span class="cheat-cmd">git remote -v</span><span class="cheat-desc">Check remote connection</span></div>
+      </div>
+    </div>
+
+    <div class="cheat-card">
+      <div class="cheat-card-head" style="background:#92400e;">📦 Daily Workflow</div>
+      <div class="cheat-card-body">
+        <div class="cheat-row"><span class="cheat-cmd">git status</span><span class="cheat-desc">See changed files</span></div>
+        <div class="cheat-row"><span class="cheat-cmd">git add &lt;file&gt;</span><span class="cheat-desc">Stage a file</span></div>
+        <div class="cheat-row"><span class="cheat-cmd">git add .</span><span class="cheat-desc">Stage all changes</span></div>
+        <div class="cheat-row"><span class="cheat-cmd">git commit -m "msg"</span><span class="cheat-desc">Save snapshot</span></div>
+        <div class="cheat-row"><span class="cheat-cmd">git push origin main</span><span class="cheat-desc">Upload to GitHub</span></div>
+        <div class="cheat-row"><span class="cheat-cmd">git pull origin main</span><span class="cheat-desc">Download latest</span></div>
+      </div>
+    </div>
+
+    <div class="cheat-card">
+      <div class="cheat-card-head" style="background:#1d4ed8;">🌿 Branching</div>
+      <div class="cheat-card-body">
+        <div class="cheat-row"><span class="cheat-cmd">git branch</span><span class="cheat-desc">List branches</span></div>
+        <div class="cheat-row"><span class="cheat-cmd">git branch &lt;name&gt;</span><span class="cheat-desc">Create branch</span></div>
+        <div class="cheat-row"><span class="cheat-cmd">git switch &lt;name&gt;</span><span class="cheat-desc">Switch branch (new)</span></div>
+        <div class="cheat-row"><span class="cheat-cmd">git checkout &lt;name&gt;</span><span class="cheat-desc">Switch branch (old)</span></div>
+        <div class="cheat-row"><span class="cheat-cmd">git switch -c &lt;name&gt;</span><span class="cheat-desc">Create + switch</span></div>
+        <div class="cheat-row"><span class="cheat-cmd">git branch -d &lt;name&gt;</span><span class="cheat-desc">Delete branch</span></div>
+      </div>
+    </div>
+
+    <div class="cheat-card">
+      <div class="cheat-card-head" style="background:#6d28d9;">🔗 Sync &amp; Merge</div>
+      <div class="cheat-card-body">
+        <div class="cheat-row"><span class="cheat-cmd">git fetch origin</span><span class="cheat-desc">Download (no merge)</span></div>
+        <div class="cheat-row"><span class="cheat-cmd">git merge &lt;branch&gt;</span><span class="cheat-desc">Merge branch in</span></div>
+        <div class="cheat-row"><span class="cheat-cmd">git push -u origin main</span><span class="cheat-desc">First push ever</span></div>
+        <div class="cheat-row"><span class="cheat-cmd">git push origin &lt;branch&gt;</span><span class="cheat-desc">Push a branch</span></div>
+      </div>
+    </div>
+
+    <div class="cheat-card">
+      <div class="cheat-card-head" style="background:#b91c1c;">🔧 Fix Mistakes</div>
+      <div class="cheat-card-body">
+        <div class="cheat-row"><span class="cheat-cmd">git restore &lt;file&gt;</span><span class="cheat-desc">Discard file changes</span></div>
+        <div class="cheat-row"><span class="cheat-cmd">git restore --staged &lt;file&gt;</span><span class="cheat-desc">Unstage a file</span></div>
+        <div class="cheat-row"><span class="cheat-cmd">git reset --soft HEAD~1</span><span class="cheat-desc">Undo last commit (keep files)</span></div>
+        <div class="cheat-row"><span class="cheat-cmd">git reset --hard HEAD~1</span><span class="cheat-desc">⚠️ Undo + delete changes</span></div>
+        <div class="cheat-row"><span class="cheat-cmd">git revert &lt;commit-id&gt;</span><span class="cheat-desc">Safe undo (new commit)</span></div>
+      </div>
+    </div>
+
+    <div class="cheat-card">
+      <div class="cheat-card-head" style="background:#0f766e;">🕵️ Inspect</div>
+      <div class="cheat-card-body">
+        <div class="cheat-row"><span class="cheat-cmd">git log --oneline</span><span class="cheat-desc">Short history</span></div>
+        <div class="cheat-row"><span class="cheat-cmd">git log --oneline --graph --all</span><span class="cheat-desc">Visual branch history</span></div>
+        <div class="cheat-row"><span class="cheat-cmd">git diff</span><span class="cheat-desc">See unstaged changes</span></div>
+        <div class="cheat-row"><span class="cheat-cmd">git diff --staged</span><span class="cheat-desc">See staged changes</span></div>
+        <div class="cheat-row"><span class="cheat-cmd">git show &lt;commit-id&gt;</span><span class="cheat-desc">Details of one commit</span></div>
+      </div>
+    </div>
+
+    <div class="cheat-card">
+      <div class="cheat-card-head" style="background:#7c3aed;">⚡ Advanced</div>
+      <div class="cheat-card-body">
+        <div class="cheat-row"><span class="cheat-cmd">git stash</span><span class="cheat-desc">Save work-in-progress</span></div>
+        <div class="cheat-row"><span class="cheat-cmd">git stash pop</span><span class="cheat-desc">Restore stashed work</span></div>
+        <div class="cheat-row"><span class="cheat-cmd">git stash list</span><span class="cheat-desc">See all stashes</span></div>
+        <div class="cheat-row"><span class="cheat-cmd">git tag v1.0</span><span class="cheat-desc">Create a version tag</span></div>
+        <div class="cheat-row"><span class="cheat-cmd">git push origin v1.0</span><span class="cheat-desc">Push tag to GitHub</span></div>
+        <div class="cheat-row"><span class="cheat-cmd">git push origin --tags</span><span class="cheat-desc">Push all tags</span></div>
+      </div>
+    </div>
+  </div>
+
+  <h3>Alternative Git Hosting Platforms</h3>
+  <div class="grid-3">
+    <div class="card card-top">
+      <h4>🦊 GitLab</h4>
+      <p>More features than GitHub, generous free tier, can self-host on your own server. Great for teams wanting full control.</p>
+    </div>
+    <div class="card card-top g">
+      <h4>🪣 Bitbucket</h4>
+      <p>Integrates deeply with Jira and the Atlassian suite. Free for small teams. Used heavily in enterprise software companies.</p>
+    </div>
+    <div class="card card-top y">
+      <h4>🫖 Gitea</h4>
+      <p>Ultra-lightweight, self-hosted only. Perfect for companies wanting a private internal Git server with minimal resources.</p>
+    </div>
+  </div>
+
+  <div class="box box-green">
+    <h4>💼 The Industry Reality</h4>
+    <p>Every tech company — from startups to Google — uses Git. Most use GitHub. Learning Git and GitHub makes you <strong>instantly employable</strong>. If a company uses GitLab or Bitbucket instead, you'll transfer your Git knowledge in minutes since the commands are identical. The <em>platform</em> changes, the <em>tool</em> (Git) stays the same.</p>
+  </div>
+</section>
+
+</div><!-- end .page -->
+
+<!-- ─── FOOTER ─── -->
+<div class="footer">
+  <h3>You're Ready to Code Like a Professional 🚀</h3>
+  <p>Git and GitHub are not optional — they're industry standard. Every developer uses them every day.</p>
+  <p>The best way to learn is by doing. Create your first repo today. Make commits. Push to GitHub. That's how you master Git.</p>
+  <p style="margin-top:32px;font-size:12px;opacity:.5;">Git &amp; GitHub Masterclass • Complete Guide for College Students • 2024</p>
+</div>
+
+</body>
+</html>
